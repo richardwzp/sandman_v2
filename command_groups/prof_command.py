@@ -11,6 +11,8 @@ guild_id = [709089549460045945, 753022598392053770]
 
 
 class Prof_command(interactions.Extension):
+    """generate an extension for funny comments from professors."""
+
     def __init__(self, client):
         self.client: interactions.Client = client
 
