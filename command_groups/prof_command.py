@@ -3,22 +3,20 @@ from random import randint
 from typing import Dict, Tuple, Any, Callable, Coroutine
 
 import discord
-from discord import Colour
-from discord.ext import commands
-from discord.ext.commands import Cog
-from discord_slash import SlashCommand, cog_ext
-from discord_slash.utils.manage_commands import create_option, create_choice, create_permission
-from discord_slash.model import SlashCommandPermissionType
+import interactions
 from re import search
 
 # set to null when goes global
 guild_id = [709089549460045945, 753022598392053770]
 
 
-class Prof_command(Cog):
-    @cog_ext.cog_slash(name="hemann", description="""
+class Prof_command(interactions.Extension):
+    def __init__(self, client):
+        self.client: interactions.Client = client
+
+    @interactions.extension_command(name="hemann", description="""
     make sure the bot is working
-    """, guild_ids=guild_id)
+    """)
     async def _hemann(self, ctx):
         await ctx.send(
             "I'm not naturally great with names. "
@@ -27,9 +25,9 @@ class Prof_command(Cog):
             "That's unfalsifiable. But I think 13 out of 15 in terms of class participation when "
             "I wouldn't recognize you on the back of a milk carton is fairly generous.\n \n --JBH")
 
-    @cog_ext.cog_slash(name="lerner", description="""
+    @interactions.extension_command(name="lerner", description="""
     make sure the bot is working
-    """, guild_ids=guild_id)
+    """)
     async def _lerner(self, ctx):
         await ctx.send(
             "Giving 🙄  you 🙇😱 further 😠 examples would 💢  defeat the 👏😟 purpose of 👉 the question, "
@@ -39,9 +37,9 @@ class Prof_command(Cog):
             "gym 💪 for 👏 you: 😣 they’ll 😄🙎 get 🙄 the benefit 😩 of the 👏 exercise, 🤸 and 😡 you ☝won’t. "
             ":lerner:")
 
-    @cog_ext.cog_slash(name="lerner2", description="""
+    @interactions.extension_command(name="lerner2", description="""
     make sure the bot is working
-    """, guild_ids=guild_id)
+    """)
     async def _lerner2(self, ctx):
         await ctx.send(
             'Let me gently suggest that this is a bad question to ask, especially in advance of the exam.'
@@ -69,9 +67,9 @@ class Prof_command(Cog):
             'rectify a mistake that we made.'
             'And there’s absolutely no way for us to know that in advance of grading the exam!')
 
-    @cog_ext.cog_slash(name="shiver", description="""
+    @interactions.extension_command(name="shiver", description="""
     shiver makes u shiver
-    """, guild_ids=guild_id)
+    """)
     async def _shiver(self, ctx):
         await ctx.send('Who should I thank? My so-called "colleagues," '
                        'who laugh at me behind my back, all the while becoming famous on my work? '
@@ -93,10 +91,10 @@ class Prof_command(Cog):
                        'But no one does, and no one will. So I can pretty much say exactly what I think. '
                        'Oh, yes, the acknowledgments. I think not. I did it. I did it all, by myself.')
 
-    @cog_ext.cog_slash(name="shesh", description="""
+    @interactions.extension_command(name="shesh", description="""
     hw over thanksgiving?
-    """, guild_ids=guild_id)
-    async def _shiver(self, ctx):
+    """)
+    async def _shesh(self, ctx):
         await ctx.send("I struggle to think of even one situation "
                        "where a company would move a release deadline because of the personal, "
                        "optional travel plans of its engineers. "

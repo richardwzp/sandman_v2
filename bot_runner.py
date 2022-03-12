@@ -1,12 +1,11 @@
 import json
+from typing import Callable
 
-import discord
-from discord.ext import commands
-from discord.ext.commands import Cog
-from discord_slash import SlashCommand
+import interactions
+from interactions import Client
 
 
-def run_bot(*cogs: Cog, override_token=None):
+def run_bot(*cogs: Callable[[Client], None], override_token=None):
     if override_token is not None:
         token = override_token
     else:
@@ -14,11 +13,19 @@ def run_bot(*cogs: Cog, override_token=None):
             sec = json.loads(f.read())
             token = sec['token']
 
-    intents = discord.Intents.all()
-    bot = commands.Bot(command_prefix='?', description="", intents=intents)
-    activity = discord.Activity(type=discord.ActivityType.watching, name="the server ⏳")
-    slash = SlashCommand(bot, sync_commands=True)
-    for cog in cogs:
-        bot.add_cog(cog)
+    bot = Client(token)
 
-    bot.run(token)
+    # activity = discord.Activity(type=discord.ActivityType.watching, name="the server ⏳")
+
+    @bot.event
+    async def on_ready():
+        print('Logged in as')
+        print(bot.me.name)
+        if override_token is not None:
+            print("<-- overridden instance -->")
+        print('-------------------')
+
+    for extension in cogs:
+        extension(bot)
+
+    bot.start()
