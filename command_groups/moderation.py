@@ -1,3 +1,4 @@
+import functools
 from typing import Optional
 
 from interactions import Extension, Client, CommandContext, extension_command, Option, OptionType, User, Embed, \
@@ -6,6 +7,21 @@ import interactions
 
 # set to null when goes global
 guild_id = [709089549460045945, 753022598392053770][0]
+
+
+def permission_wrapper(command_func):
+    """
+    wraps the command with a permission checker.
+
+    :return: the wrapped command
+    """
+    @functools.wraps(permission_wrapper)
+    async def wrapper(self: 'Moderation', ctx: CommandContext, *args, **kwargs):
+        for permission_id in self.moderator:
+            if permission_id in ctx.author.roles:
+                return await command_func(self, ctx, *args, **kwargs)
+        return await ctx.send("you have no permission for this command!", ephemeral=True)
+    return wrapper
 
 
 class Moderation(Extension):
@@ -23,6 +39,10 @@ class Moderation(Extension):
 
     def __init__(self, client):
         self.client: Client = client
+        # this will be replaced with a database call: a call_back here
+        self.moderator = [838875682792407060]
+        self.admin = []
+        self.privileged_group = {}
 
     @staticmethod
     def create_reason_embed(command_name: str, user: Member, reason: Optional[str]):
@@ -44,6 +64,7 @@ class Moderation(Extension):
                                 Option(name="reason", description="reason for warning",
                                        type=OptionType.STRING, required=False)],
                        scope=guild_id)
+    @permission_wrapper
     async def warn(self, ctx: CommandContext, user: Member, reason=None):
         # author = EmbedAuthor(icon_url=ctx.author.user.avatar_url, name="Warning")
         embedded_warning = self.create_reason_embed("warning", user, reason)
@@ -54,6 +75,7 @@ class Moderation(Extension):
                                 Option(name="reason", description="reason for kicking",
                                        type=OptionType.STRING, required=False)],
                        scope=guild_id)
+    @permission_wrapper
     async def kick(self, ctx: CommandContext, user: Member, reason=None):
         # author = EmbedAuthor(icon_url=ctx.author.user.avatar_url, name="Warning")
         embedded_warning = self.create_reason_embed("kick", user, reason)
@@ -68,6 +90,7 @@ class Moderation(Extension):
                                        description="how many days of message from user should be delete",
                                        type=OptionType.INTEGER, required=False)],
                        scope=guild_id)
+    @permission_wrapper
     async def ban(self, ctx: CommandContext, user: Member, reason=None, message_del_day=0):
         # author = EmbedAuthor(icon_url=ctx.author.user.avatar_url, name="Warning")
         embedded_warning = self.create_reason_embed("ban", user, reason)
