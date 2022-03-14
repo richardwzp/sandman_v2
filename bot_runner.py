@@ -2,10 +2,10 @@ import json
 from typing import Callable
 
 import interactions
-from interactions import Client, ClientPresence, StatusType, PresenceActivity, PresenceActivityType, Emoji
+from interactions import Client, ClientPresence, StatusType, PresenceActivity, PresenceActivityType
 
 
-def run_bot(*cogs: Callable[[Client], None], override_token=None):
+def run_bot(*cogs: Callable, override_token=None):
     if override_token is not None:
         token = override_token
     else:
