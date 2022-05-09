@@ -6,6 +6,8 @@ from interactions import Extension, Client, CommandContext, extension_command, O
 import interactions
 
 # set to null when goes global
+from database.database import SandmanPilot
+
 guild_id = [709089549460045945, 753022598392053770][0]
 
 
@@ -37,12 +39,13 @@ class Moderation(Extension):
        - channel - clear messages
        """
 
-    def __init__(self, client):
+    def __init__(self, client, pilot: SandmanPilot):
         self.client: Client = client
         # this will be replaced with a database call: a call_back here
         self.moderator = [838875682792407060]
         self.admin = []
         self.privileged_group = {}
+        self.pilot = pilot
 
     @staticmethod
     def create_reason_embed(command_name: str, user: Member, reason: Optional[str]):
@@ -79,7 +82,7 @@ class Moderation(Extension):
     async def kick(self, ctx: CommandContext, user: Member, reason=None):
         # author = EmbedAuthor(icon_url=ctx.author.user.avatar_url, name="Warning")
         embedded_warning = self.create_reason_embed("kick", user, reason)
-        await user.kick(ctx.guild_id, reason=reason if reason is not None else "no reason given.")
+        await user.kick(int(ctx.guild_id), reason=reason if reason is not None else "no reason given.")
         await ctx.send(embeds=[embedded_warning])
 
     @extension_command(name="ban", description="ban a user with reason",
@@ -94,7 +97,7 @@ class Moderation(Extension):
     async def ban(self, ctx: CommandContext, user: Member, reason=None, message_del_day=0):
         # author = EmbedAuthor(icon_url=ctx.author.user.avatar_url, name="Warning")
         embedded_warning = self.create_reason_embed("ban", user, reason)
-        await user.ban(ctx.guild_id,
+        await user.ban(int(ctx.guild_id),
                        reason=reason if reason is not None else "no reason given.",
                        delete_message_days=message_del_day)
         await ctx.send(embeds=[embedded_warning])

@@ -2,19 +2,20 @@ import json
 from random import randint
 from typing import Dict, Tuple, Any, Callable, Coroutine
 
-import discord
 import interactions
-from re import search
 
 # set to null when goes global
+from database.database import SandmanPilot
+
 guild_id = [709089549460045945, 753022598392053770][0]
 
 
 class Prof_command(interactions.Extension):
     """generate an extension for funny comments from professors."""
 
-    def __init__(self, client):
+    def __init__(self, client, pilot: SandmanPilot):
         self.client: interactions.Client = client
+        self.pilot = pilot
 
     @interactions.extension_command(name="hemann", description="""
     make sure the bot is working
@@ -36,8 +37,7 @@ class Prof_command(interactions.Extension):
             "which is for you ☝️  read and 👏👏 figure out 😲 what it means, and what it’s 💯✋ asking ❔"
             "😭 for, 😡 so 💁that you can 📑 solve the ⚕🕑 problem. Asking ❔ someone else 🤷😯 to work 🏢 "
             "through 👉🤢 the ❌  examples for you is like 🙄  asking 💬 them 🖋️ to go 🏃 to 😀 the 🏋️‍♂️  "
-            "gym 💪 for 👏 you: 😣 they’ll 😄🙎 get 🙄 the benefit 😩 of the 👏 exercise, 🤸 and 😡 you ☝won’t. "
-            ":lerner:")
+            "gym 💪 for 👏 you: 😣 they’ll 😄🙎 get 🙄 the benefit 😩 of the 👏 exercise, 🤸 and 😡 you ☝won’t. ")
 
     @interactions.extension_command(name="lerner2", description="""
     make sure the bot is working
